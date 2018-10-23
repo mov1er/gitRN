@@ -75,7 +75,11 @@ export default class EventItem extends Component {
             <Text style={styles.created_at}>{timeago().format(item.created_at)}</Text>
           </View>
           <View>
-            <Text style={styles.comment}>{item.payload.comment.body}</Text>
+            <Text style={styles.comment} numberOfLines={3}>{item.payload.comment.body}</Text>
+          </View>
+          <View style={styles.commentIssueView}>
+            <Image style={styles.commentAvatar} source={{ uri: item.payload.issue.user.avatar_url }} />
+            <Text style={styles.commentIssue} numberOfLines={3}>{item.payload.issue.title} #{item.payload.issue.number}</Text>
           </View>
         </View>
       )
@@ -139,11 +143,34 @@ export default class EventItem extends Component {
           </View>
         </View>
       )
+    } else if (item.type === 'PullRequestEvent') {
+      return (
+        <View style={styles.wrap}>
+          <View style={styles.content}>
+            <View style={styles.detail}>
+              <Text>
+                <Text>{item.actor.login} </Text>
+                <Text style={styles.action}>{item.payload.action} pull-request for </Text>
+                <Text>{item.repo.name} </Text>
+              </Text>
+            </View>
+            <View style={styles.actType}>
+              <Icon name="git-pull-request" type="Octicons" style={[styles.icon, { color: '#159951' }]} />
+            </View>
+          </View>
+          <View>
+            <Text style={styles.created_at}>{timeago().format(item.created_at)}</Text>
+          </View>
+          <View>
+            <Text style={styles.comment} numberOfLines={3}>{item.payload.pull_request.title}</Text>
+          </View>
+        </View>
+      )
     } else {
       console.log(item)
       return (
         <View style={styles.wrap}>
-
+          <Text>{item.type }</Text>
         </View>
       )
     }
@@ -207,5 +234,23 @@ const styles = StyleSheet.create({
   comment: {
     fontSize: pxToDp(24),
     color: '#666',
+    marginBottom: pxToDp(20)
+  },
+  commentIssueView: {
+    backgroundColor: '#eee',
+    padding: pxToDp(12),
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  commentIssue: {
+    fontSize: pxToDp(24),
+    color: '#666',
+    flex: 1
+  },
+  commentAvatar: {
+    width: pxToDp(60),
+    height: pxToDp(60),
+    marginRight: pxToDp(12),
+    backgroundColor: '#eee',
   }
 });

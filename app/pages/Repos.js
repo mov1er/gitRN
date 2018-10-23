@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, Text, View, Modal, Picker, Button, TouchableOpacity } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View, Modal, Picker, Button, TouchableOpacity, Dimensions, TouchableWithoutFeedback } from "react-native";
 import RepoItem from '../components/RepoItem';
 import { Icon } from 'native-base';
 import { get } from '../http/index';
 import pxToDp from '../utils/index';
 
-const REQUEST_URL = 'https://api.github.com/search/repositories?q=javascript&sort=stars&per_page=10&page=';
 let pageNo = 1;//当前第几页
 let totalPage = 5;//总的页数
 let languages = ['JavaScript', 'Java', 'C', 'Ruby', 'Python', 'C++', 'C#', 'Node', 'Html', 'Css', 'Go']
@@ -175,17 +174,37 @@ export default class Repos extends Component {
     });
   }
 
+  onRequestClose = () => {
+    this.setState({
+      modalVisible: false
+    });
+  }
+
+  _renderItem = (item) => (
+    <TouchableOpacity 
+      onPress={() => {
+        console.log(123);
+        this.props.navigation.push('RepoDetail', {item})
+      }}
+    >
+      <RepoItem {...item}></RepoItem>
+    </TouchableOpacity>
+  )
+
   render() {
     const { dataArray, isRefreshing, language } = this.state;
-
+    const {width, height} = Dimensions.get('window');
     return (
       <View>
         <Modal
-          style={{ height: pxToDp(200) }}
+          animationType={"slide"}
           transparent={true}
-          animationType="slide"
           visible={this.state.modalVisible}
+          onRequestClose={this.onRequestClose}
         >
+          <TouchableWithoutFeedback onPress={()=>this.setState({modalVisible:false})}>
+            <View style={{position:'absolute',width,height,top:0,left:0}}/>
+          </TouchableWithoutFeedback>
           <View style={styles.modalView}>
             <View style={styles.btns}>
               <TouchableOpacity  onPress={this.onCancelChange}  activeOpacity={0.5} focusedOpacity={0.8}>
@@ -216,9 +235,7 @@ export default class Repos extends Component {
           onEndReachedThreshold={1}
           onRefresh={this._onRefresh}
           onEndReached={this._onEndReached}
-          renderItem={(item) => (
-            <RepoItem {...item}></RepoItem>
-          )}
+          renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
           ListFooterComponent={this._renderFooter.bind(this)}
           ItemSeparatorComponent={this._separator}

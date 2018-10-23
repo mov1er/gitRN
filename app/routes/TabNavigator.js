@@ -7,6 +7,7 @@ import Events from '../pages/Events';
 import Issues from '../pages/Issues';
 import Mine from '../pages/Mine';
 import pxToDp from '../utils/index';
+import RepoDetail from '../pages/subPages/RepoDetail';
 
 const navigationOptions = {
   navigationOptions: {
@@ -21,7 +22,11 @@ const navigationOptions = {
 }
 
 const ReposStack = createStackNavigator({
-  Repos: Repos
+  Repos: Repos,
+  RepoDetail: {
+    screen: RepoDetail,
+    navigationOptions: ({navigation}) => ({gesturesEnable: true})
+  },
 }, navigationOptions);
 
 const EventsStack = createStackNavigator({
@@ -53,14 +58,14 @@ export default HomeStack = createBottomTabNavigator({
       }
     })
   },
-  Issues: {
-    screen: IssuesStack,
-    navigationOptions: ({ navigation, screeProps }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
-        return <Icon name="issue-opened" type="Octicons" style={[styles.tabbarImage, { color: tintColor }]} />
-      }
-    })
-  },
+  // Issues: {
+  //   screen: IssuesStack,
+  //   navigationOptions: ({ navigation, screeProps }) => ({
+  //     tabBarIcon: ({ focused, tintColor }) => {
+  //       return <Icon name="issue-opened" type="Octicons" style={[styles.tabbarImage, { color: tintColor }]} />
+  //     }
+  //   })
+  // },
   Mine: {
     screen: MineStack,
     navigationOptions: ({ navigation, screeProps }) => ({

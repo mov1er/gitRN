@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import pxToDp from '../utils/index';
 import { Icon } from 'native-base';
 import md5 from '../utils/md5';
+
 export default class RepoItem extends Component {
   render() {
     const { item } = this.props;
